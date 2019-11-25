@@ -1,17 +1,22 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-void main() => runApp(App());
+import 'package:flutter_web_socket/web_socket_helper.dart';
 
-class App extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Text('Flutter Demo Home Page'),
-    );
-  }
+main() async {
+  Map<String, dynamic> _request = {'ticks': 'R_50', 'subscribe': 1};
+
+  print('START!');
+  WebSocketHelper.getInstance.sendWebSocketRequest(json.encode(_request));
+
+  WebSocketHelper.getInstance.webSocketResponse.listen(
+    (message) {
+      print(json.decode(message));
+    },
+    onDone: () {
+      print('DONE!');
+    },
+    onError: (erorr) {
+      print(erorr);
+    },
+  );
 }
